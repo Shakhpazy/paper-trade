@@ -1,4 +1,8 @@
+import { useLiveAssets } from "@/hooks/useLiveAssets";
+
 export default function Trade() {
+  const { data: assets = {}, isPending, isError, error } = useLiveAssets();
+
   return (
     <div className="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
       <header className="mb-8">
@@ -9,12 +13,24 @@ export default function Trade() {
         </p>
       </header>
 
-      <section className="flex min-h-72 items-center justify-center rounded-2xl border border-dashed bg-card/60 p-8 text-center">
-        <div className="max-w-sm">
-          <h2 className="font-semibold">Trade ticket coming next</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            This page is ready for your symbol search and order form.
-          </p>
+      <section className="rounded-2xl border bg-card p-5 shadow-sm sm:p-6">
+        <h2 className="font-semibold">Live assets</h2>
+
+        {isPending && <p className="mt-4 text-sm text-muted-foreground">Loading assets...</p>}
+
+        {isError && <p className="mt-4 text-sm text-destructive">{error.message}</p>}
+
+        {!isPending && !isError && Object.keys(assets).length === 0 && (
+          <p className="mt-4 text-sm text-muted-foreground">Waiting for live market data...</p>
+        )}
+
+        <div className="mt-4 divide-y">
+          {Object.entries(assets).map(([symbol, asset]) => (
+            <div key={symbol} className="flex items-center justify-between py-3">
+              <span className="font-medium">{symbol}</span>
+              <span>${asset.price.toFixed(2)}</span>
+            </div>
+          ))}
         </div>
       </section>
     </div>
