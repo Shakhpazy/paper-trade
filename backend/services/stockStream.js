@@ -16,7 +16,7 @@ const socket = new WebSocket(
 );
 
 socket.on("open", () => {
-    console.log("Connected to Alpaca!")
+    //console.log("Connected to Alpaca!")
 
     socket.send(JSON.stringify({
         action: "auth",

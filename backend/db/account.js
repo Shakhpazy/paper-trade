@@ -31,4 +31,13 @@ async function updateAccount(userId, cash) {
     return result[0];
 }
 
-export { getAllAccounts, createNewAccount, updateAccount }
+async function getAccountCash(userId) {
+    const result = await sql`
+        SELECT cash_balance
+        From accounts
+        WHERE user_id = ${userId}
+    `
+    return result[0]
+}
+
+export { getAllAccounts, createNewAccount, updateAccount, getAccountCash }

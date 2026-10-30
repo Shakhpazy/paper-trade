@@ -1,14 +1,28 @@
 import { Router } from "express";
-import { getAllAccounts, createNewAccount, updateAccount } from "../db/account.js"
+import { getAllAccounts, createNewAccount, updateAccount, getAccountCash} from "../db/account.js"
 
 const router = Router()
 
 router.get("/accounts", async (req, res) => {
     try {
-        const result = getAllAccounts()
+        const result = await getAllAccounts()
         res.json(result)
     } catch (error) {
-        res.send(error)
+        res.status(500).json({
+            error: error.message || "Internal server error"
+        })
+    }
+})
+
+router.get("/account/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const result = await getAccountCash(id)
+        res.json(result)
+    } catch (error) {
+        res.status(500).json({
+            error: error.message || "Internal server error"
+        })
     }
 })
 
@@ -39,6 +53,8 @@ router.patch("/account", async (req, res) => {
         res.send(error)
     }
 })
+
+
 
 
 export default router
