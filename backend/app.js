@@ -1,6 +1,7 @@
 import express from 'express'
 import userRouter from './routes/users.js'
 import accountRouter from './routes/account.js'
+import assetRouter from './routes/asset.js'
 
 const app = express();
 const port = 3000;
@@ -14,5 +15,6 @@ app.listen(port, () => {
 });
 
 
-app.use('/api', userRouter)
-app.use('/api', accountRouter)
+app.use('/api', assetRouter);
+app.use('/api', userRouter);
+app.use('/api', accountRouter);
