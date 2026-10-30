@@ -1,7 +1,7 @@
 import { useLiveAssets } from "@/hooks/useLiveAssets";
 
 export default function Trade() {
-  const { data: assets = {}, isPending, isError, error } = useLiveAssets();
+  const { data: assets = [], isPending, isError, error } = useLiveAssets();
 
   return (
     <div className="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
@@ -20,15 +20,18 @@ export default function Trade() {
 
         {isError && <p className="mt-4 text-sm text-destructive">{error.message}</p>}
 
-        {!isPending && !isError && Object.keys(assets).length === 0 && (
+        {!isPending && !isError && assets.length === 0 && (
           <p className="mt-4 text-sm text-muted-foreground">Waiting for live market data...</p>
         )}
 
         <div className="mt-4 divide-y">
-          {Object.entries(assets).map(([symbol, asset]) => (
-            <div key={symbol} className="flex items-center justify-between py-3">
-              <span className="font-medium">{symbol}</span>
-              <span>${asset.price.toFixed(2)}</span>
+          {assets.map((asset) => (
+            <div key={asset.id} className="flex items-center justify-between py-3">
+              <div>
+                <p className="font-medium">{asset.symbol}</p>
+                <p className="text-sm text-muted-foreground">{asset.name}</p>
+              </div>
+              <span>${Number(asset.last_price).toFixed(2)}</span>
             </div>
           ))}
         </div>
