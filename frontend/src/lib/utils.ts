@@ -1,12 +1,12 @@
 import { supabase } from "@/config/supabase.ts"
 
-async function getSessionToken() {
+async function getSessionToken() : Promise<(any)> {
     const { data: { session } } = await supabase.auth.getSession()
 
     return session?.access_token ?? null
 }
 
-async function getUser() {
+async function getUser() : Promise<(any)> {
     const { data: { user }, error } = await supabase.auth.getUser()
 
     if (error) return null

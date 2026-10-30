@@ -1,8 +1,17 @@
 import { Clock3 } from "lucide-react";
+import { useAccountCash } from "@/hooks/accountData";
 
 export default function Dashboard() {
+  const { data, isLoading } = useAccountCash();
+
+  const accountBalance = Number(data?.cash_balance);
+  const formattedBalance = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(accountBalance);
+
   const metrics = [
-    { label: "Account balance", value: "$0.00" },
+    { label: "Account balance", value: isLoading ? "loading..." : formattedBalance },
     { label: "Open positions", value: "0" },
     { label: "Day P&L", value: "$0.00" },
   ];
