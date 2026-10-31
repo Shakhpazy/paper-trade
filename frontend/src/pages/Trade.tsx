@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { useLiveAssets } from "@/hooks/useLiveAssets";
+
 
 export default function Trade() {
   const { data: assets = [], isPending, isError, error } = useLiveAssets();
@@ -27,11 +29,22 @@ export default function Trade() {
         <div className="mt-4 divide-y">
           {assets.map((asset) => (
             <div key={asset.id} className="flex items-center justify-between py-3">
-              <div>
+              <div className="flex items-center gap-2">
+                <img
+                  src={asset.logo_url}
+                  alt=""
+                  width={50}
+                  height={50}
+                />
                 <p className="font-medium">{asset.symbol}</p>
                 <p className="text-sm text-muted-foreground">{asset.name}</p>
               </div>
               <span>${Number(asset.last_price).toFixed(2)}</span>
+              <a>
+                <Button>
+                  Trade
+                </Button>
+              </a>
             </div>
           ))}
         </div>
