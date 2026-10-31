@@ -1,9 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { useLiveAssets } from "@/hooks/useLiveAssets";
+import { Link, useNavigate } from "react-router";
+import { buttonVariants } from "@/components/ui/button";
 
 
 export default function Trade() {
   const { data: assets = [], isPending, isError, error } = useLiveAssets();
+  const navigate = useNavigate()
 
   return (
     <div className="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
@@ -33,18 +35,16 @@ export default function Trade() {
                 <img
                   src={asset.logo_url}
                   alt=""
-                  width={50}
-                  height={50}
+                  width={24}
+                  height={24}
                 />
                 <p className="font-medium">{asset.symbol}</p>
                 <p className="text-sm text-muted-foreground">{asset.name}</p>
               </div>
               <span>${Number(asset.last_price).toFixed(2)}</span>
-              <a>
-                <Button>
+                <Link to={`/trade/${asset.symbol}`} className={buttonVariants()}>
                   Trade
-                </Button>
-              </a>
+                </Link>
             </div>
           ))}
         </div>
