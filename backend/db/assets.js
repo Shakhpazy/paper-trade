@@ -23,4 +23,4 @@ async function updateAssetPrice(symbol, price, timestamp) {
     return result[0] ?? null;
 }
 
-export { getAssets, updateAssetPrice }
+export { getAssets, updateAssetPrice };

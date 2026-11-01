@@ -4,26 +4,42 @@ import { getAssets, updateAssetPrice } from "../db/assets.js"
 
 const router = Router()
 
-router.get("/assets/live", async (req, res) => {
+router.get("/assets", async (req, res) => {
     try {
-        const result = await getAssets();
-
-        for (const asset of result) {
-            const livePrice = latestPrices.get(asset.symbol);
-
-            if (livePrice) {
-                asset.last_price = livePrice.price;
-                asset.last_price_at = livePrice.timestamp;
-            }
-        }
-
-        console.log(latestPrices)
-        res.json(result)
+        const assets = await getAssets();
+        res.json(assets)
     } catch (error) {
-        res.status(500).json({ error: "Failed to retrieve prices" })
+        console.error("Failed to retrieve assets:", error);
+        res.status(500).json({ error: "Failed to retrieve assets" })
     }
 })
 
+router.get("/assets/live", (req, res) => {
+    const prices = Array.from(latestPrices, ([symbol, price]) => ({
+        symbol,
+        last_price: price.price,
+        last_price_at: price.timestamp
+    }));
+
+    res.json(prices);
+})
+
+router.get("/assets/live/:symbol", (req, res) => {
+    const symbol = req.params.symbol.toUpperCase();
+    const livePrice = latestPrices.get(symbol);
+
+    if (!livePrice) {
+        return res.status(404).json({ error: "Live price not available" });
+    }
+
+    res.json({
+        symbol,
+        last_price: livePrice.price,
+        last_price_at: livePrice.timestamp
+    });
+});
+
+// This is not scaable but fine for the Size of app we have.
 async function saveLatestPrices() {
     for (const [symbol, data] of latestPrices) {
         try {
