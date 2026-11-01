@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { latestPrices } from "../services/stockStream.js"
 import { getAssets, updateAssetPrice } from "../db/assets.js"
+import "../services/cryptoStream.js"
 
 const router = Router()
 
