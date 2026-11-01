@@ -1,7 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   useAssets,
-  type Asset,
   type LivePrice,
 } from "@/hooks/useLiveAssets";
 
@@ -19,17 +18,12 @@ async function fetchLivePrice(symbol: string): Promise<LivePrice> {
 
 export function useLiveAsset(symbol?: string) {
   const normalizedSymbol = symbol?.toUpperCase();
-  const queryClient = useQueryClient();
   const assetsQuery = useAssets();
 
   const priceQuery = useQuery({
     queryKey: ["live-price", normalizedSymbol],
     queryFn: () => fetchLivePrice(normalizedSymbol!),
     enabled: Boolean(normalizedSymbol),
-    initialData: () => {
-      const prices = queryClient.getQueryData<LivePrice[]>(["live-prices"]);
-      return prices?.find((price) => price.symbol === normalizedSymbol);
-    },
     refetchInterval: 3000,
     retry: false,
   });
@@ -39,9 +33,7 @@ export function useLiveAsset(symbol?: string) {
   );
 
   return {
-    data: asset
-      ? ({ ...asset, ...priceQuery.data } satisfies Asset)
-      : undefined,
+    data: asset ? { ...asset, ...priceQuery.data } : undefined,
     isPending: assetsQuery.isPending,
     isError: assetsQuery.isError,
     error: assetsQuery.error,

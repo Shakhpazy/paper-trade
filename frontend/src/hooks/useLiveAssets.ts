@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 export type Asset = {
@@ -62,16 +61,13 @@ export function useLiveAssets() {
   const assetsQuery = useAssets();
   const pricesQuery = useLivePrices();
 
-  const data = useMemo(() => {
-    const pricesBySymbol = new Map(
-      pricesQuery.data?.map((price) => [price.symbol, price])
+  const data = assetsQuery.data?.map((asset) => {
+    const livePrice = pricesQuery.data?.find(
+      (price) => price.symbol === asset.symbol
     );
 
-    return assetsQuery.data?.map((asset) => ({
-      ...asset,
-      ...pricesBySymbol.get(asset.symbol),
-    }));
-  }, [assetsQuery.data, pricesQuery.data]);
+    return { ...asset, ...livePrice };
+  });
 
   return {
     ...assetsQuery,

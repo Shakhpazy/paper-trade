@@ -49,12 +49,9 @@ export default function DashboardLayout() {
               to={to}
               title={label}
               className={({ isActive }) =>
-                [
-                  "flex min-h-11 items-center justify-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors md:justify-start",
-                  isActive
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
-                ].join(" ")
+                `flex min-h-11 items-center justify-center gap-3 rounded-xl px-3 text-sm font-medium md:justify-start ${
+                  isActive ? "bg-sidebar-accent" : "text-muted-foreground hover:bg-sidebar-accent"
+                }`
               }
             >
               <Icon className="size-[18px] shrink-0" />
