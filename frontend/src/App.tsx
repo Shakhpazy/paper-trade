@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Portfolio from "./pages/Portfolio";
 import Trade from "./pages/Trade";
 import History from "./pages/History";
+import TradeTicker from "./pages/TradeTicker"
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/trade" element={<Trade />} />
           <Route path="/history" element={<History />} />
+
+          <Route path="trade/:ticker" element={<TradeTicker />} />
         </Route>
       </Route>
 

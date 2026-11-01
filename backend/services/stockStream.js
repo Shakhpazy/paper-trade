@@ -37,7 +37,6 @@ socket.on("message", (message) => {
             timestamp: event.t
       });
     }
-    console.log(latestPrices)
 
     // Subscribe after successful authentication
     if (event.T === "success" && event.msg === "authenticated") {

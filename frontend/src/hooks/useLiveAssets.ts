@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-type LiveAsset = {
+export type Asset = {
   id: string;
   symbol: string;
   name: string;
@@ -11,22 +11,66 @@ type LiveAsset = {
   created_at: string;
 };
 
-async function fetchLiveAssets(): Promise<LiveAsset[]> {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_API}/api/assets/live`
-  );
+export type LivePrice = {
+  symbol: string;
+  last_price: string | number;
+  last_price_at: string;
+};
+
+const apiUrl = import.meta.env.VITE_BACKEND_API;
+
+async function fetchAssets(): Promise<Asset[]> {
+  const response = await fetch(`${apiUrl}/api/assets`);
 
   if (!response.ok) {
-    throw new Error("Failed to fetch live assets");
+    throw new Error("Failed to fetch assets");
   }
 
   return response.json();
 }
 
-export function useLiveAssets() {
+async function fetchLivePrices(): Promise<LivePrice[]> {
+  const response = await fetch(
+    `${apiUrl}/api/assets/live`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch live prices");
+  }
+
+  return response.json();
+}
+
+export function useAssets() {
   return useQuery({
-    queryKey: ["live-assets"],
-    queryFn: fetchLiveAssets,
+    queryKey: ["assets"],
+    queryFn: fetchAssets,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useLivePrices() {
+  return useQuery({
+    queryKey: ["live-prices"],
+    queryFn: fetchLivePrices,
     refetchInterval: 3000,
   });
+}
+
+export function useLiveAssets() {
+  const assetsQuery = useAssets();
+  const pricesQuery = useLivePrices();
+
+  const data = assetsQuery.data?.map((asset) => {
+    const livePrice = pricesQuery.data?.find(
+      (price) => price.symbol === asset.symbol
+    );
+
+    return { ...asset, ...livePrice };
+  });
+
+  return {
+    ...assetsQuery,
+    data,
+  };
 }
